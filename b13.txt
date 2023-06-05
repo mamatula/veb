@@ -1,0 +1,463 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="b13.index" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link rel="stylesheet" type="text/css" href="StyleSheet1.css">
+</head>
+<body>
+    <form id="form1" runat="server">
+
+        <div id="naslovi">
+        <div id="naslov1">Zadatak 6</div>
+        <div id="naslov2">Telefonski imenik</div>
+        </div>
+
+        <div id="tekst">Parametri za pretragu:</div>
+        <br />
+
+        <div id="red1">
+            <div id="tekst">Ime: <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox> </div>
+            <div id="tekst">Adresa: <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox> </div>
+            <div id="tekst">Telefon: <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox> </div>
+            <div id="dugme"><asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click" /></div>
+        </div>
+        <div id ="red2">
+            <div id="tekst">Prezime: <asp:TextBox ID="TextBox4" runat="server"></asp:TextBox> </div>
+            <div id="tekst">Mesto: <asp:DropDownList ID="DropDownList1" runat="server">
+                <asp:ListItem>Izaberi...</asp:ListItem>
+                <asp:ListItem>Backo Gradiste</asp:ListItem>
+                <asp:ListItem>Becej</asp:ListItem>
+                <asp:ListItem>Turija</asp:ListItem>
+                </asp:DropDownList> </div>
+            <div id="tekst">Email: <asp:TextBox ID="TextBox6" runat="server"></asp:TextBox> </div>
+        </div>
+        <asp:Table ID="Table1" runat="server">
+            <asp:TableRow runat="server" BorderColor="Black" BorderStyle="Solid" BorderWidth="1px">
+                <asp:TableCell runat="server">Rbr</asp:TableCell>
+                <asp:TableCell runat="server">Ime</asp:TableCell>
+                <asp:TableCell runat="server">Prezime</asp:TableCell>
+                <asp:TableCell runat="server">Adresa</asp:TableCell>
+                <asp:TableCell runat="server">Telefon</asp:TableCell>
+                <asp:TableCell runat="server">Email</asp:TableCell>
+                <asp:TableCell runat="server">Mesto</asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+
+        <div id="naslovi">
+            <div id="naslov2">Elektrotehnicka skola "Nikola Tesla" Nis</div>
+            <div id ="naslov3"><a href="VazniTelefoni.aspx">Vazni telefoni</a></div>
+            <div id ="naslov3"><a href="uputsvo.aspx">Uputstvo</a></div>
+            <div id ="naslov3"><a href="autor.aspx">O autoru</a></div>
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+DUGME
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.IO;
+
+namespace b13
+{
+    public partial class index : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            StreamReader sr = new StreamReader(Server.MapPath("imenik.txt"));
+            Class1 vp = new Class1();
+            while (!sr.EndOfStream)
+            {
+                vp.metoda(sr.ReadLine());
+                if (TextBox1.Text == "" && TextBox2.Text == "" && TextBox3.Text == "" && DropDownList1.Text == "Izaberi..." && TextBox4.Text == "" && TextBox6.Text == "")
+                {
+                    TableRow tr = new TableRow();
+
+                    TableCell rbr = new TableCell();
+                    rbr.Text = vp.Rbr;
+                    tr.Cells.Add(rbr);
+
+                    TableCell ime = new TableCell();
+                    ime.Text = vp.Ime;
+                    tr.Cells.Add(ime);
+
+                    TableCell prezime = new TableCell();
+                    prezime.Text = vp.Prezime;
+                    tr.Cells.Add(prezime);
+
+                    TableCell adresa = new TableCell();
+                    adresa.Text = vp.Adresa;
+                    tr.Cells.Add(adresa);
+
+                    TableCell telefon = new TableCell();
+                    telefon.Text = vp.Telefon;
+                    tr.Cells.Add(telefon);
+
+                    TableCell email = new TableCell();
+                    email.Text = vp.Email;
+                    tr.Cells.Add(email);
+
+                    TableCell mesto = new TableCell();
+                    mesto.Text = vp.Mesto;
+                    tr.Cells.Add(mesto);
+
+                    Table1.Rows.Add(tr);
+                }
+            }
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+             StreamReader sr = new StreamReader(Server.MapPath("imenik.txt"));
+            Class1 vp = new Class1();
+            while (!sr.EndOfStream)
+            {
+                vp.metoda(sr.ReadLine());
+                if (TextBox1.Text != "")
+                {
+                    if (vp.Ime.IndexOf(TextBox1.Text) >= 0)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell rbr = new TableCell();
+                        rbr.Text = vp.Rbr;
+                        tr.Cells.Add(rbr);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = vp.Ime;
+                        tr.Cells.Add(ime);
+
+                        TableCell prezime = new TableCell();
+                        prezime.Text = vp.Prezime;
+                        tr.Cells.Add(prezime);
+
+                        TableCell adresa = new TableCell();
+                        adresa.Text = vp.Adresa;
+                        tr.Cells.Add(adresa);
+
+                        TableCell telefon = new TableCell();
+                        telefon.Text = vp.Telefon;
+                        tr.Cells.Add(telefon);
+
+                        TableCell email = new TableCell();
+                        email.Text = vp.Email;
+                        tr.Cells.Add(email);
+
+                        TableCell mesto = new TableCell();
+                        mesto.Text = vp.Mesto;
+                        tr.Cells.Add(mesto);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (TextBox2.Text != "")
+                {
+                    if (vp.Adresa.IndexOf(TextBox2.Text) >= 0)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell rbr = new TableCell();
+                        rbr.Text = vp.Rbr;
+                        tr.Cells.Add(rbr);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = vp.Ime;
+                        tr.Cells.Add(ime);
+
+                        TableCell prezime = new TableCell();
+                        prezime.Text = vp.Prezime;
+                        tr.Cells.Add(prezime);
+
+                        TableCell adresa = new TableCell();
+                        adresa.Text = vp.Adresa;
+                        tr.Cells.Add(adresa);
+
+                        TableCell telefon = new TableCell();
+                        telefon.Text = vp.Telefon;
+                        tr.Cells.Add(telefon);
+
+                        TableCell email = new TableCell();
+                        email.Text = vp.Email;
+                        tr.Cells.Add(email);
+
+                        TableCell mesto = new TableCell();
+                        mesto.Text = vp.Mesto;
+                        tr.Cells.Add(mesto);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (TextBox3.Text != "")
+                {
+                    if (vp.Telefon.IndexOf(TextBox3.Text) >= 0)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell rbr = new TableCell();
+                        rbr.Text = vp.Rbr;
+                        tr.Cells.Add(rbr);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = vp.Ime;
+                        tr.Cells.Add(ime);
+
+                        TableCell prezime = new TableCell();
+                        prezime.Text = vp.Prezime;
+                        tr.Cells.Add(prezime);
+
+                        TableCell adresa = new TableCell();
+                        adresa.Text = vp.Adresa;
+                        tr.Cells.Add(adresa);
+
+                        TableCell telefon = new TableCell();
+                        telefon.Text = vp.Telefon;
+                        tr.Cells.Add(telefon);
+
+                        TableCell email = new TableCell();
+                        email.Text = vp.Email;
+                        tr.Cells.Add(email);
+
+                        TableCell mesto = new TableCell();
+                        mesto.Text = vp.Mesto;
+                        tr.Cells.Add(mesto);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (DropDownList1.Text != "Izaberi...")
+                {
+                    if (DropDownList1.Text == vp.Mesto)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell rbr = new TableCell();
+                        rbr.Text = vp.Rbr;
+                        tr.Cells.Add(rbr);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = vp.Ime;
+                        tr.Cells.Add(ime);
+
+                        TableCell prezime = new TableCell();
+                        prezime.Text = vp.Prezime;
+                        tr.Cells.Add(prezime);
+
+                        TableCell adresa = new TableCell();
+                        adresa.Text = vp.Adresa;
+                        tr.Cells.Add(adresa);
+
+                        TableCell telefon = new TableCell();
+                        telefon.Text = vp.Telefon;
+                        tr.Cells.Add(telefon);
+
+                        TableCell email = new TableCell();
+                        email.Text = vp.Email;
+                        tr.Cells.Add(email);
+
+                        TableCell mesto = new TableCell();
+                        mesto.Text = vp.Mesto;
+                        tr.Cells.Add(mesto);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (TextBox4.Text != "")
+                {
+                    if (vp.Prezime.IndexOf(TextBox4.Text) >= 0)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell rbr = new TableCell();
+                        rbr.Text = vp.Rbr;
+                        tr.Cells.Add(rbr);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = vp.Ime;
+                        tr.Cells.Add(ime);
+
+                        TableCell prezime = new TableCell();
+                        prezime.Text = vp.Prezime;
+                        tr.Cells.Add(prezime);
+
+                        TableCell adresa = new TableCell();
+                        adresa.Text = vp.Adresa;
+                        tr.Cells.Add(adresa);
+
+                        TableCell telefon = new TableCell();
+                        telefon.Text = vp.Telefon;
+                        tr.Cells.Add(telefon);
+
+                        TableCell email = new TableCell();
+                        email.Text = vp.Email;
+                        tr.Cells.Add(email);
+
+                        TableCell mesto = new TableCell();
+                        mesto.Text = vp.Mesto;
+                        tr.Cells.Add(mesto);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (TextBox6.Text != "")
+                {
+                    if (vp.Email.IndexOf(TextBox6.Text) >= 0)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell rbr = new TableCell();
+                        rbr.Text = vp.Rbr;
+                        tr.Cells.Add(rbr);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = vp.Ime;
+                        tr.Cells.Add(ime);
+
+                        TableCell prezime = new TableCell();
+                        prezime.Text = vp.Prezime;
+                        tr.Cells.Add(prezime);
+
+                        TableCell adresa = new TableCell();
+                        adresa.Text = vp.Adresa;
+                        tr.Cells.Add(adresa);
+
+                        TableCell telefon = new TableCell();
+                        telefon.Text = vp.Telefon;
+                        tr.Cells.Add(telefon);
+
+                        TableCell email = new TableCell();
+                        email.Text = vp.Email;
+                        tr.Cells.Add(email);
+
+                        TableCell mesto = new TableCell();
+                        mesto.Text = vp.Mesto;
+                        tr.Cells.Add(mesto);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+            }
+        }
+    }
+}
+
+KLASA
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace b13
+{
+    public class Class1
+    {
+        private string rbr, ime, prezime, adresa, telefon, mesto, email;
+
+        public string Rbr
+        { get { return rbr; } }
+
+        public string Ime
+        { get { return ime; } }
+
+        public string Prezime
+        { get { return prezime; } }
+
+        public string Telefon
+        { get { return telefon; } }
+
+        public string Adresa
+        { get { return adresa; } }
+
+        public string Mesto
+        { get { return mesto; } }
+
+        public string Email
+        { get { return email; } }
+
+        public void metoda(string s)
+        {
+            string[] podaci = s.Split('|');
+            rbr = podaci[0];
+            ime = podaci[1];
+            prezime = podaci[2];
+            adresa = podaci[3];
+            telefon = podaci[5];
+            mesto = podaci[4];
+            email = podaci[6];
+        }
+    }
+}
+
+STYLESHEET
+
+body {
+}
+#naslovi {
+    display:inline-block;
+    background-color:#004d99;
+    width:100%;
+}
+#naslov1{
+    background-color:#004d99;
+    padding:20px;
+    font-family:'Comic Sans MS';
+    color:white;
+    display:inline-block;
+    border-right-color:white;
+    border-right-width:1px;
+    border-right-style:solid;
+}
+#naslov2{
+    background-color:#004d99;
+    padding:20px;
+    font-family:'Comic Sans MS';
+    color:white;
+    display:inline-block;
+}
+#naslov3{
+
+    text-align:right;
+    background-color:#004d99;
+    padding:20px;
+    font-family:'Comic Sans MS';
+    color:white;
+    display:inline-block;
+}
+#tekst {
+    font-family:'Comic Sans MS';
+    color:#004d99;
+    padding:5px;
+    display:inline-block;
+}
+#red1 {
+    display:inline-block;
+}
+#dugme {
+    display:inline-block;
+    margin-left:10px;
+}
+
+a:link {
+    color:white;
+}
+
+a:visited {
+    color:white;
+}
+
+a:hover {
+    color:white;
+}
+
+a:active {
+    color:white;
+}
