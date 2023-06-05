@@ -1,0 +1,220 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="b14.index" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+    <link rel="stylesheet" type="text/css" href="StyleSheet1.css" />
+<body>
+    <form id="form1" runat="server">
+        <div id="naslovi">
+            <div id="naslovlevo">Zadatak 14</div>
+            <div id ="naslovdesno">TV Program</div>
+        </div>
+
+        <div id="opcije">
+            <div class="tekst">Datum: </div> 
+            <div class="tekst">  <asp:DropDownList ID="DropDownList1" runat="server" Height="16px" Width="134px">
+                <asp:ListItem>01.02.2023</asp:ListItem>
+                <asp:ListItem>02.02.2023</asp:ListItem>
+                <asp:ListItem>03.02.2023</asp:ListItem>
+                <asp:ListItem>04.02.2023</asp:ListItem>
+                <asp:ListItem>05.02.2023</asp:ListItem>
+                <asp:ListItem>06.02.2023</asp:ListItem>
+                </asp:DropDownList>  Tip emisije:  
+                <asp:DropDownList ID="DropDownList2" runat="server">
+                    <asp:ListItem>Izaberi...</asp:ListItem>
+                    <asp:ListItem>Informativni program</asp:ListItem>
+                    <asp:ListItem>Serija</asp:ListItem>
+                    <asp:ListItem>Film</asp:ListItem>
+                    <asp:ListItem>Ostalo</asp:ListItem>
+                    <asp:ListItem>Zabavni program</asp:ListItem>
+                </asp:DropDownList>
+            </div>
+            <asp:Button ID="Button1" runat="server" Text="Button" Width="106px" OnClick="Button1_Click" />
+        </div>
+        <asp:Table ID="Table1" runat="server">
+            <asp:TableRow runat="server">
+                <asp:TableCell runat="server" BackColor="#336699" ForeColor="White">Vreme</asp:TableCell>
+                <asp:TableCell runat="server" BackColor="#336699" ForeColor="White">Naziv emisije</asp:TableCell>
+                <asp:TableCell runat="server" BackColor="#336699" ForeColor="White">Tip emisije</asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+        <br />
+        <div id="naslovi">
+            <div id="naslovlevo">Elektrotehnicka skola "Nikola Tesla" Nis</div>
+            <div id="autoruputstvo"><a href="uputstvo.aspx">Uputstvo</a></div>
+            <div id="autoruputstvo"><a href="autor.aspx">Autor</a></div>
+        </div>
+    </form>
+</body>
+</html>
+
+KLASA
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace b14
+{
+    public class Class1
+    {
+        private string vreme, naziv,emisija,tip;
+        public string Vreme
+        { get { return vreme; } }
+        public string Naziv
+        { get { return naziv; } }
+        public string Tip
+        { get { return tip; } }
+        public string Emisija
+        { get { return emisija; } }
+            public void metoda(string s) {
+            string[] podaci = s.Split('|');
+            vreme = podaci[0];
+            naziv = podaci[1];
+            emisija = podaci[2];
+            tip = podaci[3];
+        }
+    }
+}
+
+DUGME
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.IO;
+
+namespace b14
+{
+    public partial class index : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            StreamReader sr = new StreamReader(Server.MapPath(DropDownList1.Text + ".txt"));
+            Class1 vp = new Class1();
+            while (!sr.EndOfStream)
+            {
+                vp.metoda(sr.ReadLine());
+                if (DropDownList2.SelectedIndex >= 0)
+                {
+                    if (DropDownList2.Text == "Izaberi...")
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell vreme = new TableCell();
+                        vreme.Text = vp.Vreme;
+                        tr.Cells.Add(vreme);
+                        TableCell naziv = new TableCell();
+                        naziv.Text = vp.Naziv;
+                        tr.Cells.Add(naziv);
+                        
+                        TableCell tip = new TableCell();
+                        tip.Text = "<img src=\"" + vp.Tip + "\" width=70 height=70>";
+                        tr.Cells.Add(tip);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+            }
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            StreamReader sr = new StreamReader(Server.MapPath(DropDownList1.Text + ".txt"));
+            Class1 vp = new Class1();
+            while (!sr.EndOfStream)
+            {
+                vp.metoda(sr.ReadLine());
+
+                if (DropDownList2.Text != "Izaberi...")
+                {
+                    if (DropDownList2.Text == vp.Emisija)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell vreme = new TableCell();
+                        vreme.Text = vp.Vreme;
+                        tr.Cells.Add(vreme);
+                        TableCell naziv = new TableCell();
+                        naziv.Text = vp.Naziv;
+                        tr.Cells.Add(naziv);
+
+                        TableCell tip = new TableCell();
+                        tip.Text = "<img src=\"" + vp.Tip + "\" width=70 height=70>";
+                        tr.Cells.Add(tip);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+            }
+        }
+    }
+}
+
+STYLESHEET
+
+body {
+}
+.tekst {
+    font-family:'Comic Sans MS';
+font-size:15px;
+display:inline-block;
+padding:5px;
+}
+#naslovi {
+        
+        background-color:#336699;
+        width:100%;
+}
+#opcije {
+    padding:10px;
+display:inline-block;
+}
+#naslovlevo {
+    display:inline-block;
+background-color:#336699;
+font-family:'Comic Sans MS';
+font-size:20px;
+color:white;
+padding-top:25px;
+padding-bottom:25px;
+padding-left:10px;
+padding-right:10px;
+border-right-style:solid;
+border-right-width:1px;
+border-right-color:white;
+}
+#naslovdesno {
+        display:inline-block;
+background-color:#336699;
+font-family:'Comic Sans MS';
+font-size:20px;
+color:white;
+padding-top:25px;
+padding-bottom:25px;
+padding-left:10px;
+padding-right:10px;
+}
+#autoruputstvo {
+    display:inline-block;
+background-color:#336699;
+font-family:'Comic Sans MS';
+font-size:20px;
+color:white;
+padding-top:25px;
+padding-bottom:25px;
+padding-left:10px;
+padding-right:10px;
+text-align:right;
+}
+a {
+color:white;
+}
