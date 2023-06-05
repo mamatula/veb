@@ -1,0 +1,347 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="WebApplication1.Index" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link rel="stylesheet" type="text/css" href="StyleSheet1.css"/><title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    <div id="menu">
+<ul>
+<li>Zadatak 17</li>
+<li>Web Prodavnica</li>
+
+</ul>
+
+</div>
+        <img id="slika1" src="webshop.png" /><center><h1 id="naslov">WEB PRODAVNICA</h1></center>
+        <br /><br /><br />
+        <hr/>
+        <br />
+        Parametri za pretragu:
+        
+        
+        
+        <br />
+        <br />
+        <br />
+        <asp:Label ID="Label1" runat="server" Text="Proizvodjac"></asp:Label>&nbsp;&nbsp;&nbsp; <asp:DropDownList ID="DropDownList1" runat="server" Height="16px" Width="75px">
+            <asp:ListItem>Izaberi</asp:ListItem>
+            <asp:ListItem>lenovo</asp:ListItem>
+            <asp:ListItem>Hp</asp:ListItem>
+            <asp:ListItem>Asus</asp:ListItem>
+            <asp:ListItem>Toshiba</asp:ListItem>
+            <asp:ListItem>DELL</asp:ListItem>
+        </asp:DropDownList>
+   
+        &nbsp;&nbsp;&nbsp;
+        <asp:label ID="Label2" runat="server" text="Kamera"></asp:label>&nbsp;&nbsp;&nbsp;&nbsp; <asp:DropDownList ID="DropDownList2" runat="server" Width="75px">
+            <asp:ListItem>Izaberi</asp:ListItem>
+            <asp:ListItem>Canon</asp:ListItem>
+        </asp:DropDownList>
+
+        &nbsp;&nbsp;&nbsp;
+        <asp:label ID="Label3" runat="server" text="Ekran"></asp:label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <asp:DropDownList ID="DropDownList3" runat="server" Width="75px">
+            <asp:ListItem>Izaberi</asp:ListItem>
+            <asp:ListItem>15in</asp:ListItem>
+            <asp:ListItem>17in</asp:ListItem>
+            <asp:ListItem>20in</asp:ListItem>
+        </asp:DropDownList>
+        <br />
+        <asp:label ID="Label4" runat="server" text="Ram"></asp:label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <asp:DropDownList ID="DropDownList4" runat="server" Width="75px">
+            <asp:ListItem>Izaberi</asp:ListItem>
+            <asp:ListItem>4GB</asp:ListItem>
+            <asp:ListItem>6GB</asp:ListItem>
+            <asp:ListItem>16GB</asp:ListItem>
+            <asp:ListItem>32GB</asp:ListItem>
+        </asp:DropDownList>
+        &nbsp;&nbsp;&nbsp;
+        <asp:label ID="Label6" runat="server" text="Procesor"></asp:label>&nbsp;&nbsp;&nbsp; <asp:DropDownList ID="DropDownList6" runat="server" Height="16px" Width="75px">
+            <asp:ListItem>Izaberi</asp:ListItem>
+            <asp:ListItem>Intel Core i5</asp:ListItem>
+            <asp:ListItem>Intel Core i7</asp:ListItem>
+            <asp:ListItem>Intel Coleron</asp:ListItem>
+        </asp:DropDownList>
+        <br />
+        <br />
+        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" style="height: 26px" Text="Trazi" />
+        <br />
+        <br />
+        <asp:Table ID="Table1" runat="server">
+            <asp:TableRow runat="server">
+                <asp:TableCell runat="server">Slika</asp:TableCell>
+                <asp:TableCell runat="server">Karakteristika</asp:TableCell>
+                <asp:TableCell runat="server">Cena</asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+        <div id="menu">
+<ul>
+<li>Elektrotehnicka skola "Nikola Tesla" Nis</li>
+<li><a href="WebForm2.aspx">Upustvo</a></li>
+<li><a href="WebForm3.aspx">O Autoru</a></li>
+
+</ul>
+    </div>
+    </form>
+</body>
+</html>
+
+DUGME
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.IO;
+
+namespace WebApplication1
+{
+    public partial class Index : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            StreamReader sr = new StreamReader(Server.MapPath("web_prodavnica1.txt"));
+            Class1 vp = new Class1();
+            while (!sr.EndOfStream)
+            {
+                vp.metoda(sr.ReadLine());
+                if (DropDownList1.SelectedValue == "Izaberi" && DropDownList2.SelectedValue == "Izaberi" && DropDownList3.SelectedValue == "Izaberi" && DropDownList4.SelectedValue == "Izaberi" && DropDownList6.SelectedValue == "Izaberi")
+                {
+                    TableRow tr = new TableRow();
+
+                    TableCell slika = new TableCell();
+                    slika.Text = "<img src=\"" + vp.Slika + "\".jpg>";
+                    tr.Cells.Add(slika);
+
+                    TableCell ime = new TableCell();
+                    ime.Text = "<b>" + vp.Naziv + "</b><br><br>Proizvodjac: " + vp.Proizvodjac + "<br>RAM: " + vp.RAM + "<br>Procesor: " + vp.Procesor + "<br>Ekran: " + vp.Ekran + "<br>Kamera: " + vp.Kamera;
+                    tr.Cells.Add(ime);
+
+                    TableCell cena = new TableCell();
+                    cena.Text = vp.Cena + " EURO";
+                    tr.Cells.Add(cena);
+
+                    Table1.Rows.Add(tr);
+                }
+            }
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+
+            StreamReader sr = new StreamReader(Server.MapPath("web_prodavnica1.txt"));
+            Class1 vp = new Class1();
+
+            while (!sr.EndOfStream)
+            {
+                vp.metoda(sr.ReadLine());
+                if (DropDownList1.Text != "Izaberi")
+                {
+                    if (DropDownList1.Text == vp.Proizvodjac)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell slika = new TableCell();
+                        slika.Text = "<img src=\"" + vp.Slika + "\".jpg>";
+                        tr.Cells.Add(slika);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = "<b>" + vp.Naziv + "</b><br><br>Proizvodjac: " + vp.Proizvodjac + "<br>RAM: " + vp.RAM + "<br>Procesor: " + vp.Procesor + "<br>Ekran: " + vp.Ekran + "<br>Kamera: " + vp.Kamera;
+                        tr.Cells.Add(ime);
+
+                        TableCell cena = new TableCell();
+                        cena.Text = vp.Cena + " EURO";
+                        tr.Cells.Add(cena);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (DropDownList2.Text != "Izaberi")
+                {
+                    if (DropDownList2.Text == vp.Kamera)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell slika = new TableCell();
+                        slika.Text = "<img src=\"" + vp.Slika + "\".jpg>";
+                        tr.Cells.Add(slika);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = "<b>" + vp.Naziv + "</b><br><br>Proizvodjac: " + vp.Proizvodjac + "<br>RAM: " + vp.RAM + "<br>Procesor: " + vp.Procesor + "<br>Ekran: " + vp.Ekran + "<br>Kamera: " + vp.Kamera;
+                        tr.Cells.Add(ime);
+
+                        TableCell cena = new TableCell();
+                        cena.Text = vp.Cena + " EURO";
+                        tr.Cells.Add(cena);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (DropDownList3.Text != "Izaberi")
+                {
+                    if (DropDownList3.Text == vp.Ekran)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell slika = new TableCell();
+                        slika.Text = "<img src=\"" + vp.Slika + "\".jpg>";
+                        tr.Cells.Add(slika);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = "<b>" + vp.Naziv + "</b><br><br>Proizvodjac: " + vp.Proizvodjac + "<br>RAM: " + vp.RAM + "<br>Procesor: " + vp.Procesor + "<br>Ekran: " + vp.Ekran + "<br>Kamera: " + vp.Kamera;
+                        tr.Cells.Add(ime);
+
+                        TableCell cena = new TableCell();
+                        cena.Text = vp.Cena + " EURO";
+                        tr.Cells.Add(cena);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (DropDownList4.Text != "Izaberi")
+                {
+                    if (DropDownList4.Text == vp.RAM)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell slika = new TableCell();
+                        slika.Text = "<img src=\"" + vp.Slika + "\".jpg>";
+                        tr.Cells.Add(slika);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = "<b>" + vp.Naziv + "</b><br><br>Proizvodjac: " + vp.Proizvodjac + "<br>RAM: " + vp.RAM + "<br>Procesor: " + vp.Procesor + "<br>Ekran: " + vp.Ekran + "<br>Kamera: " + vp.Kamera;
+                        tr.Cells.Add(ime);
+
+                        TableCell cena = new TableCell();
+                        cena.Text = vp.Cena + " EURO";
+                        tr.Cells.Add(cena);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+                if (DropDownList6.Text != "Izaberi")
+                {
+                    if (DropDownList6.Text == vp.Procesor)
+                    {
+                        TableRow tr = new TableRow();
+
+                        TableCell slika = new TableCell();
+                        slika.Text = "<img src=\"" + vp.Slika + "\".jpg>";
+                        tr.Cells.Add(slika);
+
+                        TableCell ime = new TableCell();
+                        ime.Text = "<b>" + vp.Naziv + "</b><br><br>Proizvodjac: " + vp.Proizvodjac + "<br>RAM: " + vp.RAM + "<br>Procesor: " + vp.Procesor + "<br>Ekran: " + vp.Ekran + "<br>Kamera: " + vp.Kamera;
+                        tr.Cells.Add(ime);
+
+                        TableCell cena = new TableCell();
+                        cena.Text = vp.Cena + " EURO";
+                        tr.Cells.Add(cena);
+
+                        Table1.Rows.Add(tr);
+                    }
+                }
+               
+            }
+
+        }
+    }
+}
+
+KLASA
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WebApplication1
+{
+    public class Class1
+    {
+        private string regBroj, naziv, proizvodjac, ram, procesor, kamera, ekran, slika, cena;
+
+        public string RegBroj
+        { get { return regBroj; } }
+
+        public string Naziv
+        { get { return naziv; } }
+
+        public string Proizvodjac
+        { get { return proizvodjac; } }
+
+        public string RAM
+        { get { return ram; } }
+
+        public string Procesor
+        { get { return procesor; } }
+
+        public string Kamera
+        { get { return kamera; } }
+
+        public string Ekran
+        { get { return ekran; } }
+
+        public string Slika
+        { get { return slika; } }
+
+        public string Cena
+        { get { return cena; } }
+        
+        public void metoda(string s)
+        {
+
+            regBroj = s.Substring(0, 6).Trim();
+            naziv = s.Substring(6, 25).Trim();
+            proizvodjac = s.Substring(31, 20).Trim();
+            ram = s.Substring(51, 5).Trim();
+            procesor = s.Substring(56, 15).Trim();
+            kamera = s.Substring(71, 10).Trim();
+            ekran = s.Substring(81, 10).Trim();
+            slika = s.Substring(91, 30).Trim();
+            cena = s.Substring(121, 10).Trim();
+        }
+    }
+}
+
+STYLESHEET
+
+body {
+            font-family:'Comic Sans MS';
+}
+#menu {
+        text-align:left
+}
+    #menu ul { 
+        margin-left:-10px;
+        background-color: #2A4C71;
+    }
+    #menu li {
+        list-style: none;
+        color: white;
+        border-left:4px;
+        border-color:white;
+        display: inline-block;
+        padding: 15px; 
+    }
+#slika1 {
+        height:120px;
+        width:120px;
+        float:left;
+}
+#naslov {
+        margin-left:-300px;
+
+        color: #2A4C71;
+}
+a:visited {
+        color:white;
+}
+a {
+    color:white;
+}
+
