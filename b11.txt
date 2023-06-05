@@ -1,0 +1,149 @@
+INDEX
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet1.css">
+</head>
+<body>
+</br>
+<div id="naslov">Turisticka agencija "Planinar"</div>
+
+</br></br>
+<div id="lista">
+<ul>
+	<a href="index.html"><li id="leviborder">Pocetna</li></a>
+	<a href="autor.html"><li id="leviborder">O autoru</li></a>
+	<a href="uputstvo.html"><li id="leviborder" class="desniborder">Uputstvo</li></a>
+</ul>
+</div>
+
+</br></br>
+
+<div class="container">
+	<label for="grad">Izaberite grad: </label>
+	<select name="grad" id="grad" onchange="izabraniGrad(this)">
+		<option value="beograd">Beograd</option>
+		<option value="novi-sad">Novi Sad</option>
+		<option value="nis">Nis</option>
+		<option value="pristina">Pristina</option>
+		<option value="krusevac">Krusevac</option>
+		<option value="kraljevo">Kraljevo</option>
+		<option value="pancevo">Pancevo</option>
+		<option value="subotica">Subotica</option>
+		<option value="jagodina">Jagodina</option>
+		<option value="cacak">Cacak</option>
+	</select>
+  <br><br>
+<div id="vreme">
+<iframe id="link" src="https://naslovi.net/vremenska-prognoza/" height="600px" width="500px";></iframe>
+</div>
+</div>
+<script src="Java.js"></script>
+</body>
+</html>
+
+JAVA
+
+function izabraniGrad(tekst)
+{
+	var grad = tekst.value;
+	var izabraniGrad = document.getElementById("link");
+	izabraniGrad.parentElement.style.display = "block";
+	izabraniGrad.src="https://naslovi.net/vremenska-prognoza/" + grad;
+	window.open(grad + '.html','name','top=300,left=1350,width=500,height=600');
+}
+
+STYLESHEET
+
+body{
+	background-image:url(sky.jpg);
+}
+#naslov{
+	font-family:arial;
+	color:#ff6a00;
+	font-size:40px;
+	text-align:center;
+}
+#lista{
+	text-align:center;
+}
+#lista ul{
+	 display:inline-block;
+	 font-size:0px;
+}
+#lista li{
+	color:blue;
+	font-size:15px;
+	display:inline-block;
+	padding-top:20px;
+	padding-bottom:20px;
+	padding-left:60px;
+	padding-right:60px;
+	background-color:white;
+	font-family:arial;
+	
+}
+#leviborder{
+	border-color:#ff6a00;
+	border-width:2px;
+	border-left-style:solid;
+	
+}
+.desniborder{
+	border-color:#ff6a00;
+	border-width:2px;
+	border-right-style:solid;
+}
+#lista li:hover{
+	background-color:#ff6a00;
+	color:white;
+}
+
+.container{
+	font-family:arial;
+	text-align:center;
+	background-color:white;
+	opacity:0.8;
+	padding-top:50px;
+	padding-bottom:100px;
+	margin-left:600px;
+	margin-right:600px;
+}
+#vreme{
+	text-align:center;
+}
+
+STYLESHEET 2 (NE MORA)
+
+body{
+	background-color:#ff6a00;
+}
+#naslov{
+	font-family:arial;
+	color:white;
+	font-size:40px;
+	text-align:center;
+}
+#naslov2{
+	font-family:arial;
+	color:white;
+	font-size:20px;
+	text-align:center;
+}
+
+SUBOTICA ZA PRIMER
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet2.css">
+</head>
+<body>
+</br>
+<div id="naslov">SUBOTICA</div>
+<div id="naslov2">Palic, Ekonomski fakultet</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+INDEX
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet1.css">
+</head>
+<body>
+
+
+<div id="naslov">ОСНОВНА ШКОЛА "СОЊА МАРИНКОВИЋ"</div>
+</br>
+
+<div id="lista">
+<ul>
+	<a href="index.html"><li>Почетна</li></a>
+	<a href="autor.html"><li>О аутору</li></a>
+	<a href="uputstvo.html"><li>Упутство</li></a>
+</ul>
+</div>
+
+</br></br>
+<div id="naslov">Звуци инструмената</div>
+</br></br>
+
+<table class="centar">
+   <tr>
+    <th class="naslov" id="padding">Назив интструмента</th>  
+    <th class="naslov" id="padding">Слика интструмента</th>
+    <th class="naslov" id="padding">Звук интструмента</th>
+  </tr>
+  <tr>
+    <td><div id="naslov2">Гитара</td>
+    <td><a href="https://hr.wikipedia.org/wiki/Gitara" target=_blank><img src="img/gitara.jpg" /></a></td>
+    <td><img src="img/zvucnik.png" onmouseover="zvuk1(this);" onmouseout="end(this);"/><br /><a onclick="window.open('zicani.html','name','top=300,left=1350,width=500,height=550')">Сазнај више</a></td>
+  </tr>
+  <tr>
+    <td><div id="naslov2">Клавир</div></td>
+    <td><a href="https://hr.wikipedia.org/wiki/Glasovir" target=_blank><img src="img/klavir.jpg" /></a></td>
+    <td><img src="img/zvucnik.png" onmouseover="zvuk2(this);" onmouseout="end(this);" /><br /><a onclick="window.open('udaracki.html','name','top=300,left=1350,width=500,height=550')">Сазнај више</a></td>
+  </tr>
+   <tr>
+    <td><div id="naslov2">Контрафагот</div></td>
+    <td><a href="https://hr.wikipedia.org/wiki/Kontrafagot" target=_blank><img src="img/kontrafagot.jpg" /></a></td>
+    <td><img src="img/zvucnik.png" onmouseover="zvuk3(this);" onmouseout="end(this);"/><br /><a onclick="window.open('duvacki.html','name','top=300,left=1350,width=500,height=550')">Сазнај више</a></td>
+  </tr>
+   <tr>
+    <td><div id="naslov2">Хармоника</div></td>
+    <td><a href="https://hr.wikipedia.org/wiki/Harmonika" target=_blank><img src="img/harmonika.jpg" /></a></td>
+    <td><img src="img/zvucnik.png" onmouseover="zvuk4(this);" onmouseout="end(this);"/><br /><a onclick="window.open('duvacki.html','name','top=300,left=1350,width=500,height=550')">Сазнај више</a></td>
+  </tr>
+   <tr>
+    <td><div id="naslov2">Виолина</div></td>
+    <td><a href="https://hr.wikipedia.org/wiki/Violina" target=_blank><img src="img/violina.jpg" /></a></td>
+    <td><img src="img/zvucnik.png" onmouseover="zvuk5(this);" onmouseout="end(this);"/><br /><a onclick="window.open('zicani.html','name','top=300,left=1350,width=500,height=550')">Сазнај више</a></td>
+  </tr>
+   <tr>
+    <td><div id="naslov2">Бубњеви</div></td>
+    <td><a href="https://sh.wikipedia.org/wiki/Bubnjevi" target=_blank><img src="img/bubnjevi.jpg" /></a></td>
+    <td><img src="img/zvucnik.png" onmouseover="zvuk6(this);" onmouseout="end(this);"/><br /><a onclick="window.open('udaracki.html','name','top=300,left=1350,width=500,height=550')">Сазнај више</a></td>
+  </tr>
+</table>
+<div class="prvi">
+    <p>
+             Музичка
+     </p>
+        </div>
+    <div class="drugi">
+     <p>
+             Култура
+     </p>
+        </div>
+
+
+</br></br>
+<div id="nestodole">Copyright © Основна школа "Соња Маринковић"</div>
+<script src="Java.js"></script>
+</body>
+</html>
+
+JAVA
+
+function zvuk1() {
+    zvuk = new Audio('audio/1.wav');
+    zvuk.play();
+}
+function zvuk2() {
+    zvuk = new Audio('audio/2.wav');
+    zvuk.play();
+}
+function zvuk3() {
+    zvuk = new Audio('audio/3.mp3');
+    zvuk.play();
+}
+function zvuk4() {
+    zvuk = new Audio('audio/4.wav');
+    zvuk.play();
+}
+function zvuk5() {
+    zvuk = new Audio('audio/5.mp3');
+    zvuk.play();
+}
+function zvuk6() {
+    zvuk = new Audio('audio/6.wav');
+    zvuk.play();
+}
+function end() {
+    zvuk.pause();
+    zvuk.currentTime = 0;
+}
+
+STYLESHEET
+
+body{
+	background-color:#FAFF86;
+}
+
+#nestodole{
+	background-color:green;
+	font-family:'Segoe UI';
+	font-size:18px;
+	text-align:center;
+	color:#FAFF86;
+	padding:18px;
+}
+
+#naslov{
+	font-size: 40px;
+	color:green;
+	text-align:center;
+	font-family:'Segoe UI';
+}
+#naslov2{
+	font-size: 30px;
+	text-align:center;
+	font-family:'Segoe UI';
+	
+}
+
+#lista{
+	text-align:center;
+	background-color:#9DFD97;
+	
+}
+
+#lista ul{
+	display:inline-block;
+	margin-bottom:0px;
+	margin-top:0px;
+	
+	
+}
+#lista li{
+	padding-left:75px;
+	padding-right:75px;
+	display:inline-block;
+	padding-bottom:15px;
+	padding-top:15px;
+	background-color:#9DFD97;
+	font-size:20px;
+	font-family:'Segoe UI';
+	color:green;
+}
+
+#lista li:hover{
+	color:#FAFF86;
+	background-color:green;
+}
+
+.centar {margin-left:auto;
+         margin-right:auto;
+}
+th, td {
+  border: 1px solid black;
+  text-align:center;
+  font-size:20px;
+}
+th{
+	background-color:green;
+	color:#FAFF86;
+}
+td{
+	background-color:#9DFD97;
+}
+
+img { width:60px;
+      height:60px;
+}
+
+#padding{
+	padding:15px;
+	font-family:'Segoe UI';
+}
+
+p{ 
+    font-size:60px;
+	color:green;
+	text-shadow:black 1px 1px;
+    width:1px;
+    word-wrap: break-word;
+    float:left;
+    margin-top:-590px;
+	margin-left:100px;
+	font-family:'Segoe UI';
+    
+}
+.prvi {
+    margin-left:300px;
+}
+.drugi {
+    margin-left:400px;
+}
+
+UDARACKI ZA PRIMER
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet1.css">
+</head>
+<body>
+
+
+<div id="naslov">УДАРАЧКИ ИНСТРУМЕНТИ</div>
+</br>
+
+
+
+</br>
+<div id="naslov2">удара се</div>
+
+<script src="Java.js"></script>
+</body>
+</html>

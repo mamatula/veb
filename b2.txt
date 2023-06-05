@@ -1,0 +1,221 @@
+INDEX
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet1.css">
+</head>
+<body>
+<div id="naslov">
+DOMACE ZIVOTINJE
+</div>
+
+<div id="lista">
+<ul>
+	<a href="index.html"><li>Pocetna</li></a>
+	<a href="autor.html"><li>O autoru</li></a>
+	<a href="uputstvo.html"><li>Uputstvo</li></a>
+</ul>
+</div>
+</br></br></br>
+<div class="slike">
+	<img src="slike/dog.jpg" id="slika" onclick="window.open('dog.html','name','top=620,left=180,width=300,height=200')" onmouseover="zvuk1(this);" onmouseout="endsound(this)"/>
+	<img src="slike/cat.jpg" id="slika" onclick="window.open('cat.html','name','top=620,left=480,width=300,height=200')" onmouseover="zvuk2(this);" onmouseout="endsound(this)"/>
+	<img src="slike/horse.jpg" id="slika" onclick="window.open('horse.html','name','top=620,left=780,width=300,height=200')" onmouseover="zvuk3(this);" onmouseout="endsound(this)"/>
+	<img src="slike/pig.jpg" id="slika" onclick="window.open('pig.html','name','top=620,left=1120,width=300,height=200')" onmouseover="zvuk4(this);" onmouseout="endsound(this)"/>
+	<img src="slike/cow.jpg" id="slika" onclick="window.open('cow.html','name','top=620,left=1420,width=300,height=200')" onmouseover="zvuk5(this);" onmouseout="endsound(this)"/>
+</div>
+
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+<div class="nesto">
+<div id="tekst">
+Copyright © Tehnicka Skola Becej
+</div>
+</div>
+</body>
+<script src="Java.js"></script>
+</html>
+
+JAVA
+
+function zvuk1() {
+    oooo = new Audio('zvuci/pas.wav');
+    oooo.play();
+}
+function zvuk2() {
+    oooo = new Audio('zvuci/macka.wav');
+    oooo.play();
+}
+function zvuk3() {
+    oooo = new Audio('zvuci/konj.wav');
+    oooo.play();
+}
+function zvuk4() {
+    oooo = new Audio('zvuci/svinja.wav');
+    oooo.play();
+}
+function zvuk5() {
+    oooo = new Audio('zvuci/krava.wav');
+    oooo.play();
+}
+function endsound() {
+    oooo.pause();
+    oooo.currentTime = 0;
+}
+
+
+STYLESHEET 1
+
+body{
+	background-image:url(farma.jpg);
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+#naslov
+{
+	color:yellow;
+	text-align:center;
+	font-size:50px;
+	font-family:'Segoe UI';
+	text-shadow:2px 2px purple;
+	
+}
+
+#autor{
+	text-align:center;
+	border-radius:100px;
+	padding-left:45px;
+	padding-right:45px;
+	padding-bottom:15px;
+	padding-top:15px;
+	background-color:yellow;
+	font-size:40px;
+	font-family:'Segoe UI';
+	color:purple;
+	border-style:dashed;
+	border-width:4px;
+	border-color:purple;
+	
+}
+
+.centriranje{
+	margin:auto;
+	text-align:center;
+}
+
+#lista{
+	text-align:center;
+}
+
+#lista ul{
+	display:inline-block;
+	
+}
+#lista li{
+	display:inline-block;
+	padding-left:45px;
+	padding-right:45px;
+	padding-bottom:15px;
+	padding-top:15px;
+	border-radius:10px;
+	background-color:yellow;
+	font-size:20px;
+	font-family:'Segoe UI';
+	color:purple;
+}
+
+#lista li:hover{
+	background-color:purple;
+	color:yellow;
+	cursor:pointer;
+}
+
+.slike{
+	text-align:center;
+}
+
+#slika{
+	height:300px;
+	width:300px;
+	border-color:yellow;
+	border-style:solid;
+	border-radius:150px;
+	border-width:5px;
+	
+}
+
+#slika:hover{
+	border-color:purple;
+	border-style:solid;
+	border-radius:150px;
+	border-width:5px;
+}
+
+#tekst{
+	background-color:purple;
+	font-size:20px;
+	font-family:'Segoe UI';
+	color:yellow;
+	text-align:center;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+#tekst2{
+	text-align:center;
+	border-radius:20px;
+	padding-left:25px;
+	padding-right:25px;
+	padding-bottom:5px;
+	padding-top:5px;
+	background-color:yellow;
+	font-size:20px;
+	font-family:'Segoe UI';
+	color:purple;
+	border-style:solid;
+	border-width:2px;
+	border-color:purple;
+}
+
+STYLESHEET 2 (ZA ZIVOTINJE)
+
+body{
+	background-image:url(slike/gif.gif);
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+#tekst{
+	text-align:center;
+	border-radius:20px;
+	padding-left:25px;
+	padding-right:25px;
+	padding-bottom:5px;
+	padding-top:5px;
+	background-color:yellow;
+	font-size:20px;
+	font-family:'Segoe UI';
+	color:purple;
+	border-style:solid;
+	border-width:2px;
+	border-color:purple;
+}
+#tekst2{
+	font-size:17px;
+	font-family:'Segoe UI';
+	color:yellow;
+}
+
+KRAVA (CISTO ZA PRIMER)
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet2.css">
+</head>
+<body>
+<div id="tekst">KRAVA</div>
+<div id="tekst2">Krava je odrasla ženka. Mlečna krava se uzgaja zbog proizvodnje mlijeka, koje se prerađuje u brojne prehrambene proizvode: konzumno mlijeko, pavlaka, kajmak, razne vrste sireva, puter i slično. Mladunci krava se zovu telad.Domesticiranje je počelo prvo radi mesa, a kasnije radi mlijeka i njihove snage korištene za vuču.</div>
+</body>
+</html>
+

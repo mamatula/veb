@@ -1,0 +1,267 @@
+INDEX
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet1.css">
+</head>
+<body>
+</br>
+<div id="naslov">ОСНОВНА ШКОЛА "СОЊА МАРИНКОВИЋ"</div>
+</br>
+
+<div id="lista">
+<ul>
+	<a href="index.html"><li>Почетна</li></a>
+	<a href="autor.html"><li>О аутору</li></a>
+	<a href="uputstvo.html"><li>Упутство</li></a>
+</ul>
+</div>
+
+</br></br>
+<div id="naslov2">Србија и њени суседи</div>
+
+
+
+
+<div id="karta">
+	<div class="centar">
+        <img id="mapa" src="mapa.png">
+	</div>
+        <div id="rumunija" class="zastava">
+        <img class="zastavaslika" src="drzava/rumunija.png" onmouseover="zvuk1(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('rumunija.html','name','top=200,left=100,width=400,height=300')">Румунија</a></div>
+        </div>
+
+        <div id="bugarska" class="zastava">
+        <img class="zastavaslika" src="drzava/bugarska.png" onmouseover="zvuk2(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('bugarska.html','name','top=200,left=100,width=400,height=300')">Бугарска</a></div>
+        </div>
+
+        <div id="makedonija" class="zastava">
+        <img class="zastavaslika" src="drzava/makedonija.png" onmouseover="zvuk3(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('makedonija.html','name','top=200,left=100,width=400,height=300')">Македонија</a></div>
+        </div>
+
+        <div id="albanija" class="zastava">
+        <img class="zastavaslika" src="drzava/albanija.png" onmouseover="zvuk4(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('albanija.html','name','top=200,left=100,width=400,height=300')">Албанија</a></div>
+        </div>
+
+        <div id="montenegro" class="zastava">
+        <img class="zastavaslika" src="drzava/montenegro.png" onmouseover="zvuk5(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('montenegro.html','name','top=200,left=100,width=400,height=300')">Црна Гора</a></div>
+        </div>
+
+        <div id="bosna" class="zastava">
+        <img class="zastavaslika" src="drzava/bosna.png" onmouseover="zvuk6(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('bosna.html','name','top=200,left=100,width=400,height=300')">Босна</a></div>
+        </div>
+
+        <div id="hrvatska" class="zastava">
+        <img class="zastavaslika" src="drzava/hrvatska.png" onmouseover="zvuk7(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('hrvatska.html','name','top=200,left=100,width=400,height=300')">Хрватска</a></div>
+        </div>
+
+        <div id="madjarska" class="zastava">
+        <img class="zastavaslika" src="drzava/madjarska.png" onmouseover="zvuk8(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('madjarska.html','name','top=200,left=100,width=400,height=300')">Мађарска</a></div>
+        </div>
+		
+		<div id="srbija" class="zastava">
+        <img class="zastavaslika" src="drzava/srbija.png" onmouseover="zvuk9(this);" onmouseout="endsound(this)"></br>
+        <div class="centar"><a onclick="window.open('srbija.html','name','top=200,left=100,width=400,height=300')">Srbija</a></div>
+        </div>
+		
+        </div>
+    
+
+</body>
+<script src="Java.js"></script>
+</html>
+
+JAVA
+
+function zvuk1() {
+    oooo = new Audio('zvuci/himna_rumunije.wav');
+    oooo.play();
+}
+function zvuk2() {
+    oooo = new Audio('zvuci/himna_bugarske.wav');
+    oooo.play();
+}
+function zvuk3() {
+    oooo = new Audio('zvuci/himna_makedonija.wav');
+    oooo.play();
+}
+function zvuk4() {
+    oooo = new Audio('zvuci/himna_albanije.wav');
+    oooo.play();
+}
+function zvuk5() {
+    oooo = new Audio('zvuci/himna_crne_gore.wav');
+    oooo.play();
+}
+function zvuk6() {
+    oooo = new Audio('zvuci/himna_bosne.wav');
+    oooo.play();
+}
+function zvuk7() {
+    oooo = new Audio('zvuci/himna_hrvatske.wav');
+    oooo.play();
+}
+function zvuk8() {
+    oooo = new Audio('zvuci/himna_madjarske.wav');
+    oooo.play();
+}
+function zvuk9() {
+    oooo = new Audio('zvuci/himna_srbije.wav');
+    oooo.play();
+}
+function endsound() {
+    oooo.pause();
+    oooo.currentTime = 0;
+}
+
+STYLESHEET
+
+body{
+	background-color:#FAFF86;
+}
+
+#naslov{
+	font-size: 40px;
+	color:green;
+	text-align:center;
+}
+#naslov2{
+	font-size: 30px;
+	color:green;
+	text-align:center;
+}
+
+#lista{
+	text-align:center;
+	background-color:#9DFD97;
+	
+}
+
+#lista ul{
+	display:inline-block;
+	margin-bottom:0px;
+	margin-top:0px;
+	
+	
+}
+#lista li{
+	padding-left:75px;
+	padding-right:75px;
+	display:inline-block;
+	padding-bottom:15px;
+	padding-top:15px;
+	background-color:#9DFD97;
+	font-size:20px;
+	font-family:'Segoe UI';
+	color:green;
+}
+
+#lista li:hover{
+	color:#FAFF86;
+	background-color:green;
+}
+
+.centar{
+	text-align:center;
+}
+
+
+#mapa{
+		border:solid;
+		border-color:green;
+}
+#karta {
+    position: relative;
+}
+#kartaimg {
+    width:100%;
+    height:100%;
+}
+
+#karta a:hover {
+    font-weight: bold;
+    text-decoration:none;
+	color:green;
+}
+
+.zastavaslika {
+width: 80px;
+height: 50px;
+border: 1px solid #000;
+}
+
+#albanija {
+	top:900px;
+	left:750px;
+    position: absolute; 
+}
+#srbija {
+	top:500px;
+	left:900px;
+    position: absolute; 
+}
+#bugarska{
+	top:800px;
+	left:1210px;
+    position: absolute; 
+}
+#bosna{
+	top:450px;
+	left:580px;
+    position: absolute; 
+}
+#hrvatska{
+	top:170px;
+	left:580px;
+    position: absolute; 
+}
+#madjarska{
+	top:5px;
+	left:600px;
+    position: absolute; 
+}
+#makedonija{
+	top:950px;
+	left:1050px;
+    position: absolute; 
+}
+#rumunija{
+	top:170px;
+	left:1100px;
+    position: absolute; 
+}
+#montenegro{
+	top:750px;
+	left:620px;
+    position: absolute;
+}
+
+SRBIJA CISTO ZA PRIMER
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="StyleSheet1.css">
+</head>
+<body>
+</br>
+<div id="naslov">СРБИЈА</div>
+</br>
+
+
+</br></br>
+<div id="naslov2">Главни град: Београд
+Површина: 88.499 km²</div>
+
+
+</body>
+<script src="Java.js"></script>
+</html>
+
