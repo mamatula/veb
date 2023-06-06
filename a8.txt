@@ -1,0 +1,180 @@
+//forma 1 (menu)
+
+//forma 2 (slike)
+
+	MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dt = new DataTable();
+        int red = 0;
+        string putanja = "antikviteti/no_image.jpg";
+
+private void Form2_Load(object sender, EventArgs e)
+        {
+            con.ConnectionString = 	"server=192.168.10.21;username=22stanulov;password=123;database=22stanulov_a8";
+            com.Connection = con;
+            da.SelectCommand = com;
+
+            try
+            {
+                con.Open();
+                com.CommandText = "select * from tip_antikviteta order by tip";
+                da.Fill(dt);
+
+                label2.Text = dt.Rows[red][0].ToString();
+                textBox1.Text = dt.Rows[red][1].ToString();
+
+                pictureBox1.Image = Image.FromFile(dt.Rows[red][2].ToString());
+
+                putanja = dt.Rows[red][2].ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (red > 0)
+                {
+                    red--;
+
+                    label2.Text = dt.Rows[red][0].ToString();
+                    textBox1.Text = dt.Rows[red][1].ToString();
+
+                    pictureBox1.Image = Image.FromFile(dt.Rows[red][2].ToString());
+
+                    putanja = dt.Rows[red][2].ToString();
+                }
+                if (red == 0)
+                {
+                    button2.Enabled = false;
+                }
+                if (red != 0)
+                {
+                    button3.Enabled = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("greska");
+            }
+        }
+
+private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (red < dt.Rows.Count - 1)
+                {
+                    red++;
+
+                    label2.Text = dt.Rows[red][0].ToString();
+                    textBox1.Text = dt.Rows[red][1].ToString();
+
+                    pictureBox1.Image = Image.FromFile(dt.Rows[red][2].ToString());
+
+                    putanja = dt.Rows[red][2].ToString();
+                }
+                if (red == 3)
+                {
+                    button3.Enabled = false;
+                }
+                if (red != 0)
+                {
+                    button2.Enabled = true;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("greska");
+            }
+
+        }
+
+private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                con.Open();
+
+                com.CommandText = "UPDATE tip_antikviteta SET tip = '" + textBox1.Text + "',Slika='" + putanja + "' WHERE tipantikvitetaID = " + label2.Text;
+
+                if (com.ExecuteNonQuery() > 0)
+                {
+                    MessageBox.Show("bravo brat moj");
+                    com.CommandText = "select * from tip_antikviteta order by tip";
+                    dt.Clear();
+                    da.Fill(dt);
+
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+//forma 3 (chart)
+
+MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dt = new DataTable();
+
+private void Form3_Load(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = dt;
+            chart1.DataSource = dt;
+        }
+
+private void button1_Click(object sender, EventArgs e)
+        {
+            con.ConnectionString = 	"server=192.168.10.21;username=22stanulov;password=123;database=22stanulov_a8";
+            com.Connection = con;
+            da.SelectCommand = com;
+
+            try
+            {
+                if (!con.Ping())
+                    con.Open();
+
+                com.CommandText = "SELECT grad,COUNT(antikvitetID) as 'Broj otkrica' FROM antikvitet,lokalitet,grad WHERE antikvitet.LokalitetID = lokalitet.LokalitetID AND lokalitet.GradID = grad.GradID AND year(datumpronalska) > " + numericUpDown1.Value + " GROUP BY grad HAVING COUNT(antikvitetID)>" + numericUpDown2.Value;
+                dt.Clear();
+                da.Fill(dt);
+
+                chart1.Series[0].XValueMember = "Grad";
+                chart1.Series[0].YValueMembers = "Broj otkrica";
+
+                chart1.DataBind();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+////////////////// PROSIRENJE 
+
+CREATE TABLE muzej(MuzejID int not null PRIMARY KEY, GradID int not null, Naziv varchar(20), Sajt varchar(30), Mejl varchar(30), Telefon varchar(20));
+ALTER TABLE antikvitet ADD COLUMN(MuzejID int not null);
+INSERT INTO muzej VALUES(0, 1, "Ime", "nekisajt.com","nekimejl@gmail.com", "062 3319783");
+ALTER TABLE muzej ADD FOREIGN KEY(GradID) REFERENCES grad(GradID);
+ALTER TABLE antikvitet ADD FOREIGN KEY(MuzejID) REFERENCES muzej(MuzejID);

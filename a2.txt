@@ -1,0 +1,191 @@
+FORM 1
+
+	MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable lv = new DataTable();
+        DataTable dt = new DataTable();
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                con.ConnectionString = "Server=46.40.3.35; UserName=22stanulov; Password=123; DataBase=22stanulov_a2";
+                com.Connection = con;
+                da.SelectCommand = com;
+
+                con.Open();
+
+                com.CommandText = "SELECT * FROM autor";
+                da.Fill(lv);
+
+                con.Close();
+
+                for (int i = 0; i < lv.Rows.Count; i++)
+                {
+                    ListViewItem lvi = new ListViewItem(lv.Rows[i][0].ToString());
+
+                    for (int j = 1; j < lv.Columns.Count; j++)
+                    {
+                        lvi.SubItems.Add(lv.Rows[i][j].ToString());
+                    }
+
+                    listView1.Items.Add(lvi);
+                }
+            }
+            catch
+            { 
+                
+            }
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView1.SelectedIndices.Count > 0)
+            {
+                int i = listView1.SelectedIndices[0];
+
+                textBox1.Text = lv.Rows[i][0].ToString();
+                textBox2.Text = lv.Rows[i][1].ToString();
+                textBox3.Text = lv.Rows[i][2].ToString();
+                textBox4.Text = lv.Rows[i][3].ToString();
+            }
+            else
+            {
+                textBox1.Clear();
+                textBox2.Clear();
+                textBox3.Clear();
+                textBox4.Clear();
+            }
+        }
+
+        private void brisanjeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!con.Ping())
+                {
+                    con.Open();
+                }
+
+                com.CommandText = "SELECT * FROM napisali WHERE AutorID = " + textBox1.Text;
+                dt.Clear();
+                da.Fill(dt);
+
+                if (dt.Rows.Count == 0)
+                {
+                    com.CommandText = "DELETE FROM autor WHERE AutorID = " + textBox1.Text;
+
+                    if (com.ExecuteNonQuery() > 0)
+                    {
+                        com.CommandText = "SELECT * FROM autor";
+                        lv.Clear();
+                        da.Fill(lv);
+                    }
+                    listView1.Items.Clear();
+
+                    for (int i = 0; i < lv.Rows.Count; i++)
+                    {
+                        ListViewItem lvi = new ListViewItem(lv.Rows[i][0].ToString());
+
+                        for (int j = 1; j < lv.Columns.Count; j++)
+                        {
+                            lvi.SubItems.Add(lv.Rows[i][j].ToString());
+                        }
+
+                        listView1.Items.Add(lvi);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("ne");
+                }
+            }
+            catch 
+            {
+                MessageBox.Show("greskica haha");
+            }
+        }
+
+////////////////////FORM 2
+
+MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dgv = new DataTable();
+        DataTable cb = new DataTable();
+
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                con.ConnectionString = "Server=46.40.3.35; UserName=22stanulov; Password=123; DataBase=22stanulov_a2";
+                com.Connection = con;
+                da.SelectCommand = com;
+
+                if(!con.Ping())
+                    con.Open();
+
+                com.CommandText = "SELECT CONCAT(Ime,' ',Prezime) AS 'imep',AutorID FROM autor";
+
+                da.Fill(cb);
+                comboBox1.DataSource = cb;
+                comboBox1.DisplayMember = "imep";
+                comboBox1.ValueMember = "AutorID";
+
+                dataGridView1.DataSource = dgv;
+
+                con.Close();
+ 
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!con.Ping())
+                    con.Open();
+
+                com.CommandText = "SELECT YEAR(DatumUzimanja) AS 'Godina' , COUNT(nacitanju.KnjigaID) AS 'Broj' FROM nacitanju,napisali WHERE nacitanju.KnjigaID = napisali.KnjigaID AND napisali.AutorID =" + comboBox1.SelectedValue + "  AND YEAR(datumuzimanja) BETWEEN (YEAR(NOW()) - " + numericUpDown1.Value + ") AND YEAR(NOW()) GROUP BY Godina";
+
+                dgv.Clear();
+                da.Fill(dgv);
+                
+
+                chart1.DataSource = dgv;
+
+                chart1.Series[0].XValueMember = "Godina";
+                chart1.Series[0].YValueMembers = "Broj";
+
+                chart1.DataBind();
+
+                con.Close();
+
+            }
+            catch
+            {
+
+            }
+
+/////////////////PROSIRENJE
+
+CREATE TABLE formatknjige(FormatID int not null PRIMARY KEY, KnjigaID int not null);
+CREATE TABLE format(FormatID int not null PRIMARY KEY, Naziv varchar(20));
+INSERT INTO formatknjige VALUES(1, 1);
+INSERT INTO format VALUES(1, "Prvi naziv");
+ALTER TABLE formatknjige ADD FOREIGN KEY(KnjigaID) REFERENCES knjiga(KnjigaID);
+ALTER TABLE formatknjige ADD FOREIGN KEY(FormatID) REFERENCES format(FormatID);
+ALTER TABLE citalac ADD COLUMN(DatumPlacanja date);
+ALTER TABLE citalac ADD CHECK(DatumPlacanja > NOW())

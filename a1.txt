@@ -1,0 +1,207 @@
+	MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable citaoci = new DataTable();
+        DataTable dt = new DataTable();
+        DataTable cb = new DataTable();
+        DataTable dgw = new DataTable();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                con.ConnectionString = "Server=46.40.3.35; UserName=22stanulov; Password=123; DataBase=22stanulov_biblioteka";
+                com.Connection = con;
+                da.SelectCommand = com;
+
+                con.Open();
+
+                com.CommandText = "SELECT * FROM citalac";
+                da.Fill(citaoci);
+
+                con.Close();
+
+                
+
+                for (int i = 0; i < citaoci.Rows.Count; i++)
+                {
+                    ListViewItem lvi = new ListViewItem(citaoci.Rows[i][0].ToString());
+
+                    for (int j = 1; j < citaoci.Columns.Count; j++)
+                    {
+                        lvi.SubItems.Add(citaoci.Rows[i][j].ToString());
+                    }
+                    listView1.Items.Add(lvi);
+                }
+
+                com.CommandText = "SELECT CONCAT(CitalacID,'-',Ime,'-',Prezime) as imeprez,CitalacID FROM citalac";
+                da.Fill(cb);
+
+                comboBox1.DataSource = cb;
+                comboBox1.DisplayMember = "imeprez";
+                comboBox1.ValueMember = "CitalacID";
+
+                dataGridView1.DataSource = dgw;
+
+                numericUpDown2.Value = DateTime.Now.Year;
+                numericUpDown1.Value = DateTime.Now.Year - 10;
+
+                
+            }
+            catch
+            {
+                MessageBox.Show("rip server");
+            }
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "")
+            {
+                textBox2.Text = "";
+                textBox3.Text = "";
+                textBox4.Text = "";
+                textBox5.Text = "";
+            }
+            else
+            {
+                try
+                {
+                    if (!con.Ping())
+                        con.Open();
+
+                    com.CommandText = "SELECT * FROM citalac WHERE CitalacID=" + textBox1.Text;
+
+                    dt.Clear();
+                    da.Fill(dt);
+
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        textBox2.Text = dt.Rows[0][1].ToString();
+                        textBox3.Text = dt.Rows[0][2].ToString();
+                        textBox4.Text = dt.Rows[0][3].ToString();
+                        textBox5.Text = dt.Rows[0][4].ToString();
+
+                        button1.Enabled = false;
+                    }
+                    else
+                    {
+                        textBox2.Text = "";
+                        textBox3.Text = "";
+                        textBox4.Text = "";
+                        textBox5.Text = "";
+
+                        button1.Enabled = true;
+                    }
+
+                    con.Close();
+                }
+                catch
+                {
+                    MessageBox.Show("bomba");
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "")
+                {
+                    com.CommandText = "INSERT INTO citalac VALUES(" + textBox1.Text + ",'" + textBox2.Text + "','" + textBox3.Text + "','" + textBox4.Text + "','" + textBox5.Text + "')";
+                }
+
+                if (!con.Ping())
+                    con.Open();
+
+                if (com.ExecuteNonQuery() > 0)
+                {
+                    MessageBox.Show("yippie! Sifra novog citaoca je " + textBox1.Text);
+                    button1.Enabled = false;
+                    com.CommandText = "SELECT * FROM citalac";
+
+                    citaoci.Clear();
+                    da.Fill(citaoci);
+
+                    listView1.Items.Clear();
+                    for (int i = 0; i < citaoci.Rows.Count; i++)
+                    {
+                        ListViewItem lvi = new ListViewItem(citaoci.Rows[i][0].ToString());
+
+                        for (int j = 1; j < citaoci.Columns.Count; j++)
+                        {
+                            lvi.SubItems.Add(citaoci.Rows[i][j].ToString());
+                        }
+
+                        listView1.Items.Add(lvi);
+                    }
+
+
+                }
+                con.Close();
+
+            }
+            catch
+            {
+                MessageBox.Show("greskica");
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(!con.Ping())
+                con.Open();
+
+            com.CommandText = "SELECT CONCAT(Ime,' ',Prezime) AS 'Citalac', YEAR(DatumUzimanja) AS 'Godina', " +
+"COUNT(KnjigaID) AS 'Broj iznajmljivanja', " +
+"(SELECT COUNT(KnjigaID) FROM na_citanju WHERE DatumVracanja IS NULL AND na_citanju.CitalacID = " + comboBox1.SelectedValue + " AND YEAR(DatumUzimanja) = Godina) AS 'Nije vraceno' " +
+"FROM na_citanju,citalac " +
+"WHERE na_citanju.CitalacID = citalac.CitalacID AND na_citanju.CitalacID = " + comboBox1.SelectedValue +
+" AND YEAR(DatumUzimanja) BETWEEN " + numericUpDown1.Value.ToString() +
+" AND " + numericUpDown2.Value.ToString() +
+" GROUP BY YEAR(DatumUzimanja) " +
+"ORDER BY YEAR(DatumUzimanja) ";
+
+            dgw.Clear();
+            da.Fill(dgw);
+
+            chart1.DataSource = dgw;
+            chart1.Series[0].XValueMember = "Godina";
+            chart1.Series[0].YValueMembers = "Broj iznajmljivanja";
+
+            chart1.Series[1].XValueMember = "Godina";
+            chart1.Series[1].YValueMembers = "Nije vraceno";
+
+            chart1.DataBind();
+
+            con.Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+//////////////// PROSIRENJE
+
+CREATE TABLE ogranak(OgranakID int not null,Naziv varchar(50));
+ALTER TABLE primerak ADD COLUMN(OgranakID int not null);
+ALTER TABLE primerak ADD COLUMN(DatumNabavke date);
+INSERT INTO ogranak VALUES(1,"test");
+ALTER TABLE primerak ADD FOREIGN KEY(OgranakID) REFERENCES ogranak(OgranakID);
+ALTER TABLE primerak ADD CHECK(datumnabavke > 2000);

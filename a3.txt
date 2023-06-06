@@ -1,0 +1,204 @@
+//////////////////// FORMA 1
+
+using MySql.Data.MySqlClient;
+using System.IO;
+
+namespace a3
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        MySqlCommand com = new MySqlCommand();
+        MySqlConnection con = new MySqlConnection();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable projekat = new DataTable();
+        DataTable dt = new DataTable();
+        DataTable lv = new DataTable();
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            con.ConnectionString = "Server=192.168.10.21; UserName=22stanulov; Password=123; DataBase=22stanulov_a3";
+            com.Connection = con;
+            da.SelectCommand = com;
+
+            con.Open();
+
+            com.CommandText = "SELECT * FROM projekat";
+            da.Fill(lv);
+
+            for (int i = 0; i < lv.Rows.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(lv.Rows[i][0].ToString());
+
+                for (int j = 1; j < lv.Columns.Count; j++)
+                {
+                    lvi.SubItems.Add(lv.Rows[i][j].ToString());
+                }
+
+                listView1.Items.Add(lvi);
+            }
+
+            con.Close();
+        }
+
+        private void pregledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 f = new Form2();
+            f.Show();
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView1.SelectedIndices.Count > 0)
+            {
+                int i = listView1.SelectedIndices[0];
+
+                textBox1.Text = lv.Rows[i][0].ToString();
+                textBox2.Text = lv.Rows[i][1].ToString();
+                textBox3.Text = lv.Rows[i][2].ToString();
+                textBox4.Text = lv.Rows[i][3].ToString();
+                checkBox1.Checked = Convert.ToBoolean(lv.Rows[i][4]);
+                textBox5.Text = lv.Rows[i][5].ToString();
+            }
+            else
+            {
+                textBox1.Clear();
+                textBox2.Clear();
+                textBox3.Clear();
+                textBox4.Clear();
+                textBox5.Clear();
+                checkBox1.Checked = false;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!con.Ping())
+                con.Open();
+
+            com.CommandText = "SELECT YEAR(DatumPocetka),ProjekatZavrsen,Naziv FROM projekat WHERE ProjekatID = " + textBox1.Text;
+            dt.Clear();
+            da.Fill(dt);
+
+
+            if (dt.Rows.Count > 0)
+            {
+                int godina = Convert.ToInt32(dt.Rows[0][0]);
+                bool zavrsen = Convert.ToBoolean(dt.Rows[0][1]);
+
+                if (godina < (DateTime.Now.Year - 5) && zavrsen == true)
+                {
+                    com.CommandText = "DELETE FROM Angazman WHERE ProjekatID = " + textBox1.Text + "; DELETE FROM Projekat WHERE ProjekatID = " + textBox1.Text;
+
+                    if (com.ExecuteNonQuery() > 0)
+                    {
+                        string ime = "log_" + DateTime.Now.Day + "_" + DateTime.Now.Month + "_" + DateTime.Now.Year + ".txt";
+
+                        using (StreamWriter fajl = new StreamWriter(ime, true))
+                        {
+                            fajl.WriteLine(textBox1.Text + " " + dt.Rows[0][2].ToString());
+                        }
+                        
+                        com.CommandText = "SELECT * FROM projekat";
+                        lv.Clear();
+                        da.Fill(lv);
+
+                        listView1.Items.Clear();
+
+                        for (int i = 0; i < lv.Rows.Count; i++)
+                        {
+                            ListViewItem lvi = new ListViewItem(lv.Rows[i][0].ToString());
+
+                            for (int j = 1; j < lv.Columns.Count; j++)
+                            {
+                                lvi.SubItems.Add(lv.Rows[i][j].ToString());
+                            }
+
+                            listView1.Items.Add(lvi);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("ili nije zavrsen projekat ili nije stariji od 5 godina lol");
+            }
+
+            con.Close();
+        }
+    }
+}
+
+//////////////// FORMA 2 /////////////////////////////////////////////////////
+
+using MySql.Data.MySqlClient;
+using System.IO;
+
+namespace a3
+{
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+
+        MySqlCommand com = new MySqlCommand();
+        MySqlConnection con = new MySqlConnection();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dgv = new DataTable();
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            con.ConnectionString = "Server=192.168.10.21; UserName=22stanulov; Password=123; DataBase=22stanulov_a3";
+            com.Connection = con;
+            da.SelectCommand = com;
+
+            dataGridView1.DataSource = dgv;
+
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            if (!con.Ping())
+                con.Open();
+
+            com.CommandText = "SELECT YEAR(DatumPocetka) AS 'Godina',COUNT(ProjekatID) AS 'Broj projekata' FROM projekat GROUP BY Godina";
+        }
+
+        private void numericUpDown1_ValueChanged_1(object sender, EventArgs e)
+        {
+            if (!con.Ping())
+                con.Open();
+
+            com.CommandText = "SELECT YEAR(DatumPocetka) AS 'Godina',COUNT(ProjekatID) AS 'Broj projekata',(SELECT COUNT(RadnikID) FROM angazman,projekat WHERE angazman.ProjekatID = projekat.ProjekatID AND YEAR(DatumPocetka) = YEAR(T.DatumPocetka)) AS 'Broj radnika' FROM projekat AS T WHERE YEAR(DatumPocetka) > (YEAR(NOW()) - " + numericUpDown1.Value + ") GROUP BY Godina ORDER BY Godina";
+
+            dgv.Clear();
+            da.Fill(dgv);
+
+            chart1.DataSource = dgv;
+            chart1.Series[0].XValueMember = "Godina";
+            chart1.Series[0].YValueMembers = "Broj radnika";
+
+            chart1.DataBind();
+
+            con.Close();
+        }
+    }
+}
+
+///////////////// PROSIRENJE ZA A3 ///////////////////////////
+
+CREATE TABLE Podizvodjac(PodizvodjacID int NOT null PRIMARY KEY, Naziv varchar(30));
+CREATE TABLE Angazovanje(AngazovanjeID int not null PRIMARY KEY, PodizvodjacID int(11) not null, ProjekatID int(11) not null, DatumPocetka date DEFAULT now(), DatumKraja date DEFAULT concat(year(now()), "-", "12-31"));
+ALTER TABLE angazovanje ADD FOREIGN KEY(ProjekatID) REFERENCES projekat(ProjekatID);
+ALTER TABLE angazovanje ADD FOREIGN KEY(PodizvodjacID) REFERENCES podizvodjac(PodizvodjacID);
+INSERT INTO angazovanje(AngazovanjeID, ProjekatID, Podizvodjac) VALUES(1,1,1)
+ALTER TABLE angazovanje ADD CHECK(DatumPocetka < DatumKraja)

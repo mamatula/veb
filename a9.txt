@@ -1,0 +1,201 @@
+public partial class Form1 : Form
+    {
+        MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dt = new DataTable();
+        DataTable drzava = new DataTable();
+        DataTable grad = new DataTable();
+        DataTable klub = new DataTable();
+        DataTable lv = new DataTable();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            con.ConnectionString = "server=192.168.10.21;username=22stanulov;password=123;database=22stanulov_a9";
+            com.Connection = con;
+            da.SelectCommand = com;
+
+            try
+            {
+                con.Open();
+                com.CommandText = "SELECT naziv FROM drzava";
+                da.Fill(drzava);
+
+                for (int i = 0;i<drzava.Rows.Count; i++)
+                {
+                    comboBox1.Items.Add(drzava.Rows[i][0].ToString());
+                    
+                }
+                comboBox1.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex != 0)
+            {
+                comboBox2.Enabled = true;
+                com.CommandText = "SELECT grad FROM grad,drzava WHERE grad.DrzavaID=drzava.DrzavaID and naziv='" + comboBox1.Text + "'";
+
+                grad.Clear();
+                da.Fill(grad);
+
+                comboBox2.Items.Clear();
+                comboBox2.Items.Add("Svi gradovi");
+
+                for (int i = 0; i < grad.Rows.Count; i++)
+                {
+                    comboBox2.Items.Add(grad.Rows[i][0].ToString());
+
+                }
+                comboBox2.SelectedIndex = 0;
+            }
+            else
+            {
+                comboBox2.Items.Clear();
+                comboBox2.Text = "Svi gradovi";
+                comboBox2.Enabled = false;
+
+                comboBox3.Items.Clear();
+                comboBox3.Text = "Svi klubovi";
+                comboBox3.Enabled = false;
+
+                pictureBox1.Image = Image.FromFile("klubovi/fifa.jpg");
+                label5.Text = "Zurich";
+                label6.Text = "Switzerland";
+                linkLabel1.Text = "www.fifa.com";
+            }
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox2.SelectedIndex != 0)
+            {
+                comboBox3.Enabled = true;
+                com.CommandText = "SELECT nazivkluba from klub,stadion,grad WHERE klub.stadionID=stadion.stadionID and stadion.gradid=grad.gradid and grad='" + comboBox2.Text + "'";
+                
+                klub.Clear();
+                da.Fill(klub);
+
+                comboBox3.Items.Clear();
+                comboBox3.Items.Add("Svi klubovi");
+
+                for (int i = 0; i < klub.Rows.Count; i++)
+                {
+                    comboBox3.Items.Add(klub.Rows[i][0].ToString());
+
+                }
+                comboBox3.SelectedIndex = 0;
+            }
+            else
+            {
+                comboBox3.Items.Clear();
+                comboBox3.Text = "Svi klubovi";
+                comboBox3.Enabled = false;
+
+                pictureBox1.Image = Image.FromFile("klubovi/fifa.jpg");
+                label5.Text = "Zurich";
+                label6.Text = "Switzerland";
+                linkLabel1.Text = "www.fifa.com";
+            }
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox3.SelectedIndex != 0)
+            {
+                com.CommandText = "SELECT grad,naziv,sajt,amblem from klub,stadion,grad WHERE klub.stadionID=stadion.stadionID and stadion.gradid=grad.gradid and nazivkluba = '" + comboBox3.Text + "' AND grad='" + comboBox2.Text + "'";
+                dt.Clear();
+                da.Fill(dt);
+
+                label5.Text = dt.Rows[0][0].ToString();
+                label6.Text = dt.Rows[0][1].ToString();
+                linkLabel1.Text = dt.Rows[0][2].ToString();
+
+                pictureBox1.Image = Image.FromFile(dt.Rows[0][3].ToString());
+            }
+            else
+            {
+                pictureBox1.Image = Image.FromFile("klubovi/fifa.jpg");
+                label5.Text = "Zurich";
+                label6.Text = "Switzerland";
+                linkLabel1.Text = "www.fifa.com";
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Close();
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            comboBox1.SelectedIndex = 0;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                con.Open();
+                com.CommandText = "Select naziv,NazivKluba,GolovaDomacin,GolovaGost,(SELECT nazivkluba from klub where klubid = utakmica.gostid) FROM stadion,klub,utakmica where stadion.stadionid = klub.stadionid and klub.klubid = utakmica.DomacinID AND datumigranja = '" + dateTimePicker1.Value.ToString("yyyy-MM-dd") + "'";
+                lv.Clear();
+                da.Fill(lv);
+
+                for (int i = 0; i < lv.Rows.Count; i++)
+                {
+                    ListViewItem item = new ListViewItem(lv.Rows[i][0].ToString());
+                    for (int j = 1; j < lv.Columns.Count; j++)
+                    {
+                        item.SubItems.Add(lv.Rows[i][j].ToString());
+                    }
+                    listView1.Items.Add(item);
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+    }
+
+CREATE TABLE igrac(IgracID int not null PRIMARY KEY, DrzavaID int not null, Ime varchar(20), Prezime varchar(20), DatumRodjenja date, ZemljaPorekla varchar(30));
+CREATE TABLE igracigra(IgracIgraID int not null PRIMARY KEY, IgracID int not null, KlubID int not null, DatumPocetka date not null, DatumTrajanja date);
+INSERT INTO igrac values(1, 1, "Ime", "Prezime", '1990-01-03', "Daleko negde");
+INSERT INTO igracigra(1, 1, 1, '2020-11-02', '2022-02-05');
+ALTER TABLE igracigra ADD FOREIGN KEY(IgracID) REFERENCES igrac(IgracID);
+ALTER TABLE igracigra ADD FOREIGN KEY(KlubID) REFERENCES klub(KlubID);
+ALTER TABLE igrac ADD FOREIGN KEY(DrzavaID) REFERENCES drzava(DrzavaID);
+ALTER TABLE igracigra ADD CHECK(DatumPocetka < DatumKraja);

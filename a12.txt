@@ -1,0 +1,282 @@
+//FORMA 1
+
+public partial class Form1 : Form
+    {
+        MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dt = new DataTable();
+        DataTable cb = new DataTable();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                con.ConnectionString = "server = 192.168.10.21; username = 22stanulov; password = 123; database = 22stanulov_a12";
+                com.Connection = con;
+                da.SelectCommand = com;
+
+                con.Open();
+                com.CommandText = "SELECT stadionID, Naziv,(select grad from grad where grad.gradid = stadion.gradid) as Grad , Kapacitet,Adresa, BrojUlaza from stadion";
+                da.Fill(dt);
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    ListViewItem lvi = new ListViewItem(dt.Rows[i][0].ToString());
+                    for (int j = 1; j < dt.Columns.Count; j++)
+                    {
+                        lvi.SubItems.Add(dt.Rows[i][j].ToString());
+                    }
+                    listView1.Items.Add(lvi);
+                }
+
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("greska je: " + ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView1.SelectedIndices.Count > 0)
+            {
+                int id = listView1.SelectedIndices[0];
+                textBox1.Text = dt.Rows[id][0].ToString();
+                textBox2.Text = dt.Rows[id][1].ToString();
+                textBox3.Text = dt.Rows[id][4].ToString();
+                numericUpDown1.Value = Convert.ToInt32(dt.Rows[id][3]);
+                numericUpDown2.Value = Convert.ToInt32(dt.Rows[id][5]);
+                comboBox1.Text = dt.Rows[id][2].ToString();
+            }
+            else
+            {
+                textBox1.Clear();
+                textBox2.Clear();
+                textBox3.Clear();
+                numericUpDown1.Value = 0;
+                numericUpDown2.Value = 0;
+                comboBox1.ResetText();
+            }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            Form3 f = new Form3();
+            f.Show();
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            try
+            {
+                if(!con.Ping())
+                    con.Open();
+                if (Globals.drzava == "")
+                {
+                    com.CommandText = "SELECT stadionID, Naziv,(select grad from grad where grad.gradid = stadion.gradid) as Grad , Kapacitet,Adresa, BrojUlaza from stadion";
+                }
+                else
+                {
+                    com.CommandText = "SELECT stadionID, stadion.Naziv,(select grad from grad where grad.gradid = stadion.gradid) as Grad , Kapacitet,Adresa, BrojUlaza from stadion,grad,drzava where stadion.gradid=grad.gradid and grad.drzavaid = drzava.drzavaid and drzava.naziv=" + "'" + Globals.drzava + "'";
+                }
+
+                dt.Clear();
+                listView1.Items.Clear();
+                da.Fill(dt);
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    ListViewItem lvi = new ListViewItem(dt.Rows[i][0].ToString());
+                    for (int j = 1; j < dt.Columns.Count; j++)
+                    {
+                        lvi.SubItems.Add(dt.Rows[i][j].ToString());
+                    }
+                    listView1.Items.Add(lvi);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            Form2 f = new Form2();
+            f.Show();
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && numericUpDown1.Value >= 0 && numericUpDown2.Value >= 0)
+                {
+                    if(!con.Ping())
+                        con.Open();
+
+                    com.CommandText = "UPDATE stadion set naziv = '" + textBox2.Text + "',adresa = '" + textBox3.Text + "',kapacitet = " + numericUpDown1.Value + ",brojulaza = " + numericUpDown2.Value + " where stadionid=" + textBox1.Text;
+                    if (com.ExecuteNonQuery() > 0)
+                    {
+                        MessageBox.Show("radi");
+                        com.CommandText = "SELECT stadionID, Naziv,(select grad from grad where grad.gradid = stadion.gradid) as Grad , Kapacitet,Adresa, BrojUlaza from stadion";
+                        dt.Clear();
+                        da.Fill(dt);
+
+                        listView1.Items.Clear();
+
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            ListViewItem lvi = new ListViewItem(dt.Rows[i][0].ToString());
+                            for (int j = 1; j < dt.Columns.Count; j++)
+                            {
+                                lvi.SubItems.Add(dt.Rows[i][j].ToString());
+                            }
+                            listView1.Items.Add(lvi);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("popuni ta polja");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally 
+            {
+                con.Close();
+            }
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            Form4 f = new Form4();
+            f.Show();
+        }
+    }
+
+//FORMA 2
+
+public partial class Form2 : Form
+    {
+        MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dt = new DataTable();
+
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            con.ConnectionString = "server = 192.168.10.21; username = 22stanulov; password = 123; database = 22stanulov_a12";
+            com.Connection = con;
+            da.SelectCommand = com;
+
+            try
+            {
+                con.Open();
+                com.CommandText = "SELECT Naziv,COUNT(utakmicaID) as 'Broj utakmica' from stadion,klub,utakmica where stadion.StadionID = klub.StadionID and klub.KlubID = utakmica.DomacinID and utakmica.DatumIgranja like CONCAT(year(Now())-1, '-%') group by stadion.StadionID limit 10";
+                da.Fill(dt);
+
+                chart1.DataSource = dt;
+
+                chart1.Series[0].XValueMember = "Naziv";
+                chart1.Series[0].YValueMembers = "Broj utakmica";
+
+                chart1.DataBind();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+    }
+
+//FORMA 3
+
+public partial class Form3 : Form
+    {
+        MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+
+        DataTable dt = new DataTable();
+
+        public Form3()
+        {
+            InitializeComponent();
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+            con.ConnectionString = "server = 192.168.10.21; username = 22stanulov; password = 123; database = 22stanulov_a12";
+            com.Connection = con;
+            da.SelectCommand = com;
+
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Globals.drzava = "";
+            Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Globals.drzava = textBox1.Text;
+            Application.OpenForms["Form1"].Activate();
+        }
+    }
+
+// KLASA GLOBALS
+
+class Globals
+    {
+        public static string drzava = "";
+    }
+
+// PROSIRENJE
+
+CREATE TABLE igrac(IgracID int not null, DrzavaID int not null, Ime varchar(20), Prezime varchar(30), DatumRodjenja date);
+ALTER TABLE igrac ADD PRIMARY KEY(IgracID, DrzavaID);
+CREATE TABLE periodIgranja(PeriodIgranjaID int not null PRIMARY KEY, IgracID int not null, KlubID int not null, DatumPocetka date not null, DatumKraja date);
+INSERT INTO igrac VALUES(1, 1, "Ime", "Prezime", '2007-03-11');
+INSERT INTO periodIgranja VALUES(1, 1, 1, '2019-11-11', '2021-03-06');
+ALTER TABLE igrac ADD FOREIGN KEY(DrzavaID) REFERENCES drzava(DrzavaID);
+ALTER TABLE periodIgranja ADD FOREIGN KEY(IgracID) REFERENCES igrac(IgracID);
+ALTER TABLE periodIgranja ADD FOREIGN KEY(KlubID) REFERENCES klub(KlubID);
+ALTER TABLE periodIgranja ADD CHECK(DatumPocetka < DatumKraja OR DatumKraja is null);
+

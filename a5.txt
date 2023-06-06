@@ -1,0 +1,173 @@
+forma 1 //////////////////////
+
+MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+        DataTable dt = new DataTable();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                con.ConnectionString = "Server=46.40.3.35; UserName=22stanulov; Password=123; DataBase=22stanulov_a5";
+                com.Connection = con;
+                da.SelectCommand = com;
+
+                con.Open();
+
+                com.CommandText = "select * from aktivnosti";
+                da.Fill(dt);
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    ListViewItem lvi = new ListViewItem(dt.Rows[i][0].ToString());
+                    for (int j = 1; j < dt.Columns.Count; j++)
+                    {
+                        lvi.SubItems.Add(dt.Rows[i][j].ToString());
+
+                    }
+                    listView1.Items.Add(lvi);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView1.SelectedIndices.Count > 0)
+            {
+                int id = listView1.SelectedIndices[0];
+                textBox1.Text = dt.Rows[id][0].ToString();
+                textBox2.Text = dt.Rows[id][1].ToString();
+                textBox3.Text = dt.Rows[id][3].ToString();
+                textBox4.Text = dt.Rows[id][4].ToString();
+                comboBox1.Text = dt.Rows[id][2].ToString();
+
+            }
+            else
+            {
+                textBox1.Clear();
+                textBox2.Clear();
+                textBox3.Clear();
+                textBox4.Clear();
+                comboBox1.ResetText();
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!con.Ping())
+                    con.Open();
+
+                com.CommandText = "INSERT INTO aktivnosti (AktivnostID,NazivAktivnosti,Dan,Pocetak,Zavrsetak) values(" + textBox1.Text + ",'" + textBox2.Text + "','" + comboBox1.Text + "','" + textBox3.Text + "','" + textBox4.Text + "')";
+                if (com.ExecuteNonQuery() > 0)
+                {
+                    MessageBox.Show("radi");
+                    com.CommandText = "select * from aktivnosti";
+                    dt.Clear();
+                    da.Fill(dt);
+                    listView1.Items.Clear();
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        ListViewItem lvi = new ListViewItem(dt.Rows[i][0].ToString());
+                        for (int j = 1; j < dt.Columns.Count; j++)
+                        {
+                            lvi.SubItems.Add(dt.Rows[i][j].ToString());
+
+                        }
+                        listView1.Items.Add(lvi);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void oAplikacijiToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Form2 f = new Form2();
+            f.Show();
+        }
+
+forma 2 //////////////////////
+
+MySqlConnection con = new MySqlConnection();
+        MySqlCommand com = new MySqlCommand();
+        MySqlDataAdapter da = new MySqlDataAdapter();
+        DataTable dt = new DataTable();
+
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            con.ConnectionString = "server=46.40.3.35;username=22stanulov;password=123;database=22stanulov_a5";
+            com.Connection = con;
+            da.SelectCommand = com;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                con.Open();
+                com.CommandText = "select dan,count(deteid) as 'Broj dece' from aktivnosti,registar_aktivnosti where aktivnosti.aktivnostid = registar_aktivnosti.aktivnostid and dan = 'ponedeljak' and prisustvo = 1 UNION select dan,count(deteid) as 'Broj dece' from aktivnosti,registar_aktivnosti where aktivnosti.aktivnostid = registar_aktivnosti.aktivnostid and dan = 'utorak' and prisustvo = 1 UNION select dan,count(deteid) as 'Broj dece' from aktivnosti,registar_aktivnosti where aktivnosti.aktivnostid = registar_aktivnosti.aktivnostid and dan = 'sreda' and prisustvo = 1 UNION select dan,count(deteid) as 'Broj dece' from aktivnosti,registar_aktivnosti where aktivnosti.aktivnostid = registar_aktivnosti.aktivnostid and dan = 'cetvrtak' and prisustvo = 1 UNION select dan,count(deteid) as 'Broj dece' from aktivnosti,registar_aktivnosti where aktivnosti.aktivnostid = registar_aktivnosti.aktivnostid and dan = 'petak' and prisustvo = 1 UNION select 'Subota',count(deteid) as 'Broj dece' from aktivnosti,registar_aktivnosti where aktivnosti.aktivnostid = registar_aktivnosti.aktivnostid and dan = 'subota' and prisustvo = 1 UNION select 'Nedelja',count(deteid) as 'Broj dece' from aktivnosti,registar_aktivnosti where aktivnosti.aktivnostid = registar_aktivnosti.aktivnostid and dan = 'nedelja' and prisustvo = 1";
+
+                dt.Clear();
+                da.Fill(dt);
+
+                dataGridView1.DataSource = dt;
+                chart1.DataSource = dt;
+                chart1.Series[0].XValueMember = "Dan";
+                chart1.Series[0].YValueMembers = "Broj dece";
+
+                chart1.DataBind();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+/////////////// PROSIRENJE
+
+CREATE TABLE nastavnik(NastavnikID int not null PRIMARY KEY, PunoIme varchar(30));
+ALTER TABLE aktivnost ADD COLUMN(NastavnikID int not null);
+ALTER TABLE dete ADD COLUMN(DatumPrijema date);
+INSERT INTO nastavnik VALUES(0, "Ime Prezime");
+ALTER TABLE aktivnost ADD FOREIGN KEY(NastavnikID) REFERENCES nastavnik(NastavnikID);
+ALTER TABLE dete ADD CHECK(DatumPrijema > DatumRodjenja)
